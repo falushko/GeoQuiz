@@ -3,6 +3,7 @@ package com.bignerdranch.android.geoquiz;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ public class CheatActivity extends AppCompatActivity {
             "com.bignerdranch.android.geoquiz.answer_is_true";
     public static final String EXTRA_ANSWER_SHOWN =
             "com.bignerdranch.android.geoquiz.answer_shown";
+    public static final String KEY_INDEX = "index";
 
     private boolean mAnswerIsTrue;
     private TextView mAnswerTextView;
@@ -26,30 +28,38 @@ public class CheatActivity extends AppCompatActivity {
         setResult(RESULT_OK, data);
     }
 
-
+    private void fixingLandscapeCheating(){
+        mAnswerTextView = (TextView)findViewById(R.id.answerTextView);
+        if (mAnswerIsTrue) mAnswerTextView.setText(R.string.true_button);
+        else mAnswerTextView.setText(R.string.false_button);
+        setAnswerShownResult(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
-        mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
         setAnswerShownResult(false);
-
-        mAnswerTextView = (TextView)findViewById(R.id.answerTextView);
+        if(savedInstanceState != null) {
+            mAnswerIsTrue = savedInstanceState.getBoolean(KEY_INDEX);
+            fixingLandscapeCheating();
+        }
+        mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
         mShowAnswer = (Button)findViewById(R.id.show_answer_button);
         mShowAnswer.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if (mAnswerIsTrue) {
-                    mAnswerTextView.setText(R.string.true_button);
-                } else {
-                    mAnswerTextView.setText(R.string.false_button);
-                }
-                setAnswerShownResult(true);
-
+                mAnswerIsTrue = true;
+                fixingLandscapeCheating();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean(KEY_INDEX, mAnswerIsTrue);
     }
 
     @Override

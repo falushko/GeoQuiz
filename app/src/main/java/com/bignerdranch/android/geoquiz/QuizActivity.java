@@ -27,7 +27,8 @@ public class QuizActivity extends AppCompatActivity {
             new TrueFalse(R.string.question_mideast, false),
             new TrueFalse(R.string.question_africa, false),
             new TrueFalse(R.string.question_americas, true),
-            new TrueFalse(R.string.question_asia, true),};
+            new TrueFalse(R.string.question_asia, true)
+    };
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
 
@@ -40,7 +41,7 @@ public class QuizActivity extends AppCompatActivity {
     private void checkAnswer(boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
         int messageResId;
-        if (mIsCheater) messageResId = R.string.judgment_toast;
+        if (mQuestionBank[mCurrentIndex].isIsCheater()) messageResId = R.string.judgment_toast;
         else {
             if (userPressedTrue == answerIsTrue) messageResId = R.string.correct_toast;
             else messageResId = R.string.incorrect_toast;
@@ -112,7 +113,10 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
-        if(savedInstanceState != null) mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+        if(savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mQuestionBank[mCurrentIndex].setIsCheater(savedInstanceState.getBoolean("isCheater"));
+            }
 
         updateQuestion();
     }
@@ -123,13 +127,14 @@ public class QuizActivity extends AppCompatActivity {
             return;
         }
         mIsCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN, false);
+        mQuestionBank[mCurrentIndex].setIsCheater(mIsCheater);
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        savedInstanceState.putBoolean("isCheater", mQuestionBank[mCurrentIndex].isIsCheater());
     }
 
     @Override
