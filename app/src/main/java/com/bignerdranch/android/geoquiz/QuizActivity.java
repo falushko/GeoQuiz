@@ -1,6 +1,9 @@
 package com.bignerdranch.android.geoquiz;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,6 +34,7 @@ public class QuizActivity extends AppCompatActivity {
     };
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
+    private int mBuildVersion = Build.VERSION.SDK_INT;
 
 
     private void updateQuestion() {
@@ -49,11 +53,13 @@ public class QuizActivity extends AppCompatActivity {
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        TextView mTextApi = (TextView)findViewById(R.id.api_level);
+        mTextApi.setText("Api Level: " + String.valueOf(mBuildVersion));
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
