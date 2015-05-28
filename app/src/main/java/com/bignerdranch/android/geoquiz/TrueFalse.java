@@ -1,8 +1,5 @@
 package com.bignerdranch.android.geoquiz;
 
-/**
- * Created by Владимир on 25.05.2015.
- */
 public class TrueFalse {
     private int mQuestion;
     private boolean mTrueQuestion;
